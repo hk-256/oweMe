@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crete User</title>
+</head>
+<body>
+
+    <h1>Crete a user</h1>
+
+    <form action="/createUser" method="post">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" name="user[username]" id="username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="user[password]" id="password" required>
+        </div>
+        <div>
+            <label for="upi">UPI</label>
+            <input type="text" name="user[upi]" id="upi" required>
+        </div>
+
+        <button>submit</button>
+    </form>
+
+</body>
+</html>
