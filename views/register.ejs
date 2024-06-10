@@ -1,0 +1,22 @@
+<% layout('layout/boilerplate') %>
+
+    <h1>Register</h1>
+
+    <form action="/register" method="post">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div>
+            <label for="upi">UPI</label>
+            <input type="text" name="upi" id="upi" required>
+        </div>
+
+        <button>submit</button>
+    </form>
+
+     <a href="/"> Home Page </a>

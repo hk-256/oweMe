@@ -1,0 +1,28 @@
+<% layout('layout/boilerplate') %>
+    
+    <div>
+        <p>Username:  <b><%= user.username %></b> </p>
+    </div>
+    <div>
+        <p>UPI:  <b><%= user.upi %></b> </p>
+    </div>
+
+    
+   
+    <% if( !user._id.equals(currUser._id)) {%>
+
+        <a href="/makeFriend/<%= user._id %>" class="btn">send Request</a>
+
+    <% }else{ %>
+        <h3>Your friends list</h3>
+        <ul>
+            <% for(let person of user.friends){ %>
+                <li>
+                    <a href="/user/<%=person._id%>">
+                        <b><%= person.username %></b>
+                    </a> 
+                </li>
+            <% } %>
+        </ul>
+    <% } %>
+    

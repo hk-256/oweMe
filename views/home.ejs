@@ -1,22 +1,13 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
 
-    <h1>welcome to home page!!!</h1>
-
+    <% layout('layout/boilerplate') %>
+    
     <h2>Users List</h2>
     <ul>
         <% for(let user of users){ %>
             <li>
-                <b> <%=user.username%> </b>
+                <a href="/user/<%= user._id %>" style="text-decoration: none; color: black;"> <%= user.username %></a>
             </li>
         <% } %>
     </ul>
-</body>
-</html>
+
