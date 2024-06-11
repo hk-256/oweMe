@@ -11,7 +11,9 @@
    
     <% if( !user._id.equals(currUser._id)) {%>
 
-        <a href="/makeFriend/<%= user._id %>" class="btn">send Request</a>
+        
+       <% if(!isFriend){ %> <a href="/makeFriend/<%= user._id %>" class="btn">Add Friend</a>
+       <% } %>
 
     <% }else{ %>
         <h3>Your friends list</h3>

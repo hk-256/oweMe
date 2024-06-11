@@ -1,0 +1,32 @@
+
+
+    <% layout('layout/boilerplate') %>
+    
+
+    
+    <div class="form-inline my-2 my-lg-0 ">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="search()">Search</button>
+    </div>
+
+    <% if(users.length !== 0){ %>
+        <h2>Users List</h2>
+        <ul>
+            <% for(let user of users){ %>
+                <li>
+                    <a href="/user/<%= user._id %>" style="text-decoration: none; color: black;"> <%= user.username %></a>
+                </li>
+            <% } %>
+        </ul>
+    <% } %>
+
+
+
+    <script>
+
+        function search(){
+            const query = document.querySelector('#search').value;
+            window.location.replace(`/search/${query}`);
+        }
+
+    </script>

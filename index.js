@@ -13,6 +13,7 @@ const localStrategy = require("passport-local");
 const MongoStore = require("connect-mongo");
 
 const User = require("./models/user");
+const user = require("./models/user");
 
 
 app.use(methodOverride('_method'))
@@ -70,7 +71,7 @@ app.listen(5500,()=>{
 const isLoggedIn = (req,res,next)=>{
 
     if(!req.user){
-        req.flash("error","you must be logged in first");
+        // req.flash("error","you must be logged in first");
         res.redirect("/login");
     }
     else{
@@ -89,22 +90,15 @@ app.use((req,res,next)=>{
 })
 
 
-app.get("/",async (req,res)=>{
-    const users = await User.find();
-    res.render("home",{users});
-})
-
 app.get("/login",(req,res)=>{
     res.render("login");
 })
 
 app.post("/login",passport.authenticate('local', {failureFlash: true, failureRedirect: '/login'}),(req,res)=>{
-
     req.flash("success","you are logged in");
     res.redirect(`/user/${req.user._id}`);
 
 })
-
 
 app.get("/register",(req,res)=>{
 
@@ -129,6 +123,18 @@ app.post("/register", async (req,res,next)=>{
 
 })
 
+app.get("*",isLoggedIn,(req,res,next)=>{
+    next();
+})
+
+// app.get("/",async (req,res)=>{
+//     const users = await User.find();
+//     res.render("home",{users});
+// })
+
+
+
+
 app.get("/logout",(req,res)=>{
 
     req.logout((e)=>{
@@ -136,8 +142,8 @@ app.get("/logout",(req,res)=>{
             req.flash("error","error occured while logout");
             next(e);
         }
-
-        res.redirect("/");
+        req.flash("success","You are Logged out successfully");
+        res.redirect("/login");
 
     })
 
@@ -153,14 +159,23 @@ app.get("/profile",isLoggedIn,(req,res)=>{
 app.get("/user/:id", async (req,res)=>{
     const {id} = req.params;
     const user = await User.findById(id).populate("friends","username");
-    res.render("profile",{user});
+    var isFriend = false;
+
+    for(let friend of user.friends){
+        if(friend._id.equals(req.user._id)){
+            isFriend = true;
+            break;
+        }
+    }
+
+    res.render("profile",{user,isFriend});
 
 })
 
 app.get("/makeFriend/:id", async (req,res)=>{
     const user = await User.findById(req.params.id);
 
-    user.friends.push(req.user);
+    // user.friends.push(req.user);
     req.user.friends.push(user);
 
     await user.save();
@@ -169,16 +184,26 @@ app.get("/makeFriend/:id", async (req,res)=>{
     res.redirect(`/user/${req.user._id}`);
 })
 
-app.post('/search', async (req,res)=>{
-    const {search} = req.body;
-    // res.send(search);
+
+app.get("/search",(req,res)=>{
+    const users = []
+    res.render("search",{users});
+})
+
+app.get('/search/:search', async (req,res)=>{
+    const {search} = req.params;
     const users = await User.find({
         'username': {
             '$regex': search,
             '$options': 'i'
         }
-    });
-    res.render("home",{users});
+    }).limit(10);
+
+    if(users.length === 0){
+        res.locals.error = `no user found named ${search}`;
+    }
+
+    res.render("search",{users});
 })
 
 
