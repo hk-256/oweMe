@@ -1,0 +1,7 @@
+<% layout('layout/boilerplate') %>
+
+    <% for(let X of group.groupMembers){ %>
+        <li>
+            <b><%= X.user.username %></b> >>> <%= X.owe %>
+        </li>
+    <% } %>

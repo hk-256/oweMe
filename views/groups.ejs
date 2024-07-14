@@ -1,0 +1,17 @@
+<% layout('layout/boilerplate') %>
+  
+<ul>
+    <% for(let X of groups){ %>
+        <li>
+            <a href="/groups/<%=X.group._id%>">
+                <b><%= X.group.groupName %></b>
+            </a> 
+        </li>
+    <% } %>
+</ul>
+
+<hr>
+
+<form action="/groups/create" method="get">
+    <button>New Group</button>
+</form>

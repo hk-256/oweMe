@@ -1,0 +1,19 @@
+<% layout('layout/boilerplate') %>
+
+<form action="/groups/create" method="post">
+    <label for="groupName">GroupName</label>
+    <input type="text" name="groupName" id="groupName" required>
+    <ul>
+        <% for(let user of Friends){ %>
+            <div>
+                <input type="checkbox" name="users[]" value="<%= user._id %>">
+                <a href="/user/<%=user._id%>"><%= user.username %></a>
+            </div>
+            
+        <% } %>
+    </ul>
+
+    <button>Create</button>
+
+</form>
+

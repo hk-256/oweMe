@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "body-parser": "^1.20.2",
     "bootstrap": "^5.3.3",
     "connect": "^3.7.0",
     "connect-flash": "^0.1.1",
@@ -10,6 +11,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "flash": "^1.1.0",
+    "init": "^0.1.2",
     "method-override": "^3.0.0",
     "mongoose": "^8.4.1",
     "passport": "^0.7.0",

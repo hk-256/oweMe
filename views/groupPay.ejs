@@ -1,0 +1,46 @@
+
+<% layout('layout/boilerplate') %>
+    
+
+<h1>
+    SPLIT IT
+</h1>
+
+<form action="/groups/<%= group._id %>/pay" method="post">
+
+<% for(let X of group.groupMembers){ %>
+    <% if(X.user._id.equals(currUser._id)) continue; %>
+    <li>
+        <label for="inputs"> <b> <%= X.user.username %> </b> </label> - <input type="number" class="inputs" placeholder="0" value="" name="inputs[<%= X.user._id %>]">
+    </li>
+<% } %>
+
+<button>Transact</button>
+
+</form>
+
+<button style="cursor: pointer;" onclick="sumUp()">SUM UP</button> - <input type="number" id="total" value="0" readonly>
+
+
+
+<script>
+    const inputs = document.querySelectorAll(".inputs");
+    const total = document.querySelector("#total");
+    
+    // total.addEventListener("keydown", (e)=>{
+    //     for(let input of inputs){
+    //         console.log(input.value);
+    //     }
+    // });
+
+    function sumUp(){
+        let sum = 0;
+        for(let input of inputs){
+            sum+=Number(input.value);
+        }
+        total.value = String(sum);
+    }
+
+</script>
+
+

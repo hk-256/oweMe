@@ -12,10 +12,11 @@
     <% if( !user._id.equals(currUser._id)) {%>
 
         
-       <% if(!isFriend){ %> <a href="/makeFriend/<%= user._id %>" class="btn">Add Friend</a>
+       <% if(!isFriend){ %> <a href="/sendRequest/<%= user._id %>" class="btn">Send Request</a>
        <% } %>
 
     <% }else{ %>
+        <hr>
         <h3>Your friends list</h3>
         <ul>
             <% for(let person of user.friends){ %>
@@ -26,5 +27,30 @@
                 </li>
             <% } %>
         </ul>
+        <hr>
+        <h3>Requests came</h3>
+        <ul>
+            <% for(let person of user.incomingRequest){ %>
+                <li>
+                    <a href="/user/<%=person._id%>">
+                        <b><%= person.username %></b>
+                    </a> 
+                    <a href="/makeFriend/<%=person._id%>">Accept</a>
+                </li>
+            <% } %>
+        </ul>
+        <hr>
+        <h3>Outgoing Requests</h3>
+        <ul>
+            <% for(let person of user.outgoingRequest){ %>
+                <li>
+                    <a href="/user/<%=person._id%>">
+                        <b><%= person.username %></b>
+                    </a> 
+                    <a href="/deleteRequest/<%=person._id%>">Delete Request</a>
+                </li>
+            <% } %>
+        </ul>
+
     <% } %>
     

@@ -1,0 +1,115 @@
+<% layout('layout/boilerplate') %>
+    
+    <h1><%= group.groupName %></h1>
+    <!-- <div>
+        <input type="text" id="id">
+        <button onclick="joinRoom()" id="joinbtn" >JOIN</button>
+    </div> -->
+    <div>
+        <a href="/groups/<%=group._id%>/pay">PAY</a>
+    </div>
+    <div>
+        <a href="/groups/<%=group._id%>/preview">PREVIEW</a>
+    </div>
+    <div>
+        <input type="text" id="msg">
+        <button onclick="sendMessage()" id="btn" >SEND</button>
+    </div>
+
+    <div class="box">
+        <h1>Messages came</h1>
+        <% for(let message of group.message){ %>
+            <li> <%= message.user %> - <%= message.msg %> </li>
+        <% } %>
+
+    </div>
+    
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js">
+        
+    </script>
+    <script>
+
+        const input = document.querySelector("#msg");
+        const id = document.querySelector("#id");
+        const btn = document.querySelector("#btn");
+        const joinbtn = document.querySelector("#joinbtn");
+        const box = document.querySelector(".box");
+        const socket = io("http://localhost:3000/");
+        const groupID = "<%=group._id%>";
+        const user = "<%=currUser.username%>";
+        console.log(groupID);
+        let room = "";
+        socket.on('connect', () => {
+            console.log('Connected to the server', socket.id);
+        });
+
+        // socket.on("welcome",(msg)=>{
+        //     console.log(msg);
+        // })
+
+        socket.on("receiveMessage",(data)=>{
+            const E = document.createElement("li");
+            E.textContent = `${data.user} - ${data.msg}`;
+            box.appendChild(E);
+            // console.log(data);
+        })
+
+        function joinRoom(groupID){
+            room = groupID.trim();
+            if(room.length !== 0) socket.emit("joinRoom",room);
+        }
+
+        joinRoom(groupID);
+
+        async function sendMessage(){
+
+            let data = {
+                msg: input.value.trim(),
+                user: user
+            };
+
+            if(data.msg.length === 0){
+                return;
+            }
+
+            const request = new Request(`/groups/${groupID}/putMessage`, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            const response = await fetch(request);
+            // console.log(response);
+
+            input.value = '';
+            if(msg.length !== 0 && room.length !== 0){
+                socket.emit("message",{data,room});
+            } 
+        }
+        
+        input.addEventListener('keydown',function(e){
+            if(e.key === 'Enter'){
+                sendMessage();
+            }
+        })
+
+        
+        //this function would run when u are leaving the page
+        window.addEventListener('beforeunload', (event) => {
+            socket.emit("disconnect","user disconnected");
+            socket.disconnect();
+            console.log('Disconnected from the server');
+        });
+        
+    </script>
+    <!-- <script>
+        console.log("here it is");
+        
+        const io = require("https://cdn.socket.io/4.7.5/socket.io.esm.min.js");
+        const socket = io("http://localhost:3000/");
+
+
+      </script> -->

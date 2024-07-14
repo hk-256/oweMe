@@ -8,18 +8,20 @@ const session = require("express-session");
 const flash =  require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
+const bodyParser = require("body-parser");
 
 
 const MongoStore = require("connect-mongo");
 
 const User = require("./models/user");
-const user = require("./models/user");
+const Group = require("./models/groups");
 
 
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname,"public")));
 app.engine("ejs",ejsMate);
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
 const dbUrl = 'mongodb://127.0.0.1:27017/OweMe'
@@ -127,12 +129,6 @@ app.get("*",isLoggedIn,(req,res,next)=>{
     next();
 })
 
-// app.get("/",async (req,res)=>{
-//     const users = await User.find();
-//     res.render("home",{users});
-// })
-
-
 
 
 app.get("/logout",(req,res)=>{
@@ -158,10 +154,20 @@ app.get("/profile",isLoggedIn,(req,res)=>{
 
 app.get("/user/:id", async (req,res)=>{
     const {id} = req.params;
-    const user = await User.findById(id).populate("friends","username");
+    const user = await User.findById(id)
+                            .populate("friends","username")
+                            .populate("incomingRequest","username")
+                            .populate("outgoingRequest","username");
+
     var isFriend = false;
 
     for(let friend of user.friends){
+        if(friend._id.equals(req.user._id)){
+            isFriend = true;
+            break;
+        }
+    }
+    for(let friend of user.incomingRequest){
         if(friend._id.equals(req.user._id)){
             isFriend = true;
             break;
@@ -172,11 +178,42 @@ app.get("/user/:id", async (req,res)=>{
 
 })
 
+
+app.get("/sendRequest/:id", async (req,res)=>{
+
+    const user = await User.findById(req.params.id);
+    
+    user.incomingRequest.push(req.user);
+    req.user.outgoingRequest.push(user);
+    await user.save();
+    await req.user.save();
+    res.redirect(`/user/${req.user._id}`);
+
+})
+
+app.get("/deleteRequest/:id", async (req,res)=>{
+
+    const user = await User.findById(req.params.id);
+    user.incomingRequest.remove(req.user);
+    req.user.outgoingRequest.remove(user);
+    await user.save();
+    await req.user.save();
+    res.redirect(`/user/${req.user._id}`);
+
+})
+
 app.get("/makeFriend/:id", async (req,res)=>{
+    // res.send("request came");
     const user = await User.findById(req.params.id);
 
-    // user.friends.push(req.user);
+    user.friends.push(req.user);
     req.user.friends.push(user);
+
+    req.user.incomingRequest.remove(user);
+    user.outgoingRequest.remove(req.user);
+
+    console.log(user);
+    console.log(req.user);
 
     await user.save();
     await req.user.save();
@@ -204,6 +241,119 @@ app.get('/search/:search', async (req,res)=>{
     }
 
     res.render("search",{users});
+})
+
+//groups -> start
+
+app.get("/groups",async (req,res)=>{
+    // const user = await User.findById(req.user._id).populate("groups","groupName");
+    const user = await User.findById(req.user._id).populate({
+        path: "groups.group",
+        select: "groupName"
+    });
+    const groups = user.groups;
+    // // res.send(groups);
+    // console.dir(groups);
+    // res.send("ok");
+    // res.send(groups);
+    res.render("groups",{groups});
+})
+
+app.get("/groups/create",async (req,res)=>{
+    const user = await User.findById(req.user._id).populate("friends","username");
+    const Friends = user.friends;
+    res.render("createGroup",{Friends});
+})
+
+app.post("/groups/create",async (req,res)=>{
+    const {users,groupName} = req.body;
+    const G = new Group({groupName});
+    users.push(req.user._id);
+    for(let userID of users){
+        const X = await User.findById(userID);
+        G.groupMembers.push({
+            user : X
+        });
+        X.groups.push({
+            group: G
+        });
+        await X.save();
+    }
+    G.save();
+    res.redirect(`/groups/${G._id}`);
+})
+// so this is the fetch request ---->>>
+app.post("/groups/:id/putMessage",async (req,res)=>{
+
+    const group = await Group.findById(req.params.id);
+    const data = req.body;
+    group.message.push(data);
+    await group.save();
+
+    res.send("All done");
+})
+
+app.get("/groups/:id/pay",async (req,res)=>{
+
+    const group = await Group.findById(req.params.id).populate({
+        path: "groupMembers.user",
+        select: "username"
+    });
+
+    res.render("groupPay.ejs",{group});
+
+})
+
+app.get("/groups/:id/preview",async (req,res)=>{
+
+    const group = await Group.findById(req.params.id).populate({
+        path: "groupMembers.user",
+        select: "username"
+    });
+
+    res.render("preview.ejs",{group});
+
+})
+
+app.post("/groups/:id/pay",async (req,res)=>{
+    const group = await Group.findById(req.params.id);
+    const {inputs} = req.body;
+    const result = Object.keys(inputs).map((key) => [key, inputs[key]]);
+    let sum = 0;
+    for(let X of result){
+        sum+=Number(X[1]);
+    }
+    result.push([req.user._id,sum]);
+
+    for(let input of result){
+        const user = await User.findById(input[0]);
+        var value = Number(input[1]);
+        if(user._id.equals(req.user._id)) value = (value)*(-1);
+        for(let U of group.groupMembers){
+            if(U.user._id.equals(user._id)){
+                U.owe += (value)*(-1);
+                break;
+            }
+        }
+        
+        for(let G of user.groups){
+            if(G.group._id.equals(group._id)){
+                G.owe += (value)*(-1);
+                break;
+            }
+        }
+        await user.save();
+
+    }
+
+    await group.save();
+
+    res.redirect(`/groups/${group._id}`);
+})
+
+app.get("/groups/:id",async (req,res)=>{
+    const group = await Group.findById(req.params.id);
+    res.render("socket.ejs",{group});
 })
 
 
