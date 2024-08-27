@@ -3,24 +3,25 @@
     <% layout('layout/boilerplate') %>
     
 
-    
+<!--     
     <div class="form-inline my-2 my-lg-0 ">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="search()">Search</button>
-    </div>
-
+    </div> -->
+<div style="margin: 20px 20px 20px 20px; background-color: white; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 10px 10px 10px 10px; width: 50%; margin-left: 28vw; ">
     <% if(users.length !== 0){ %>
         <h2>Users List</h2>
         <ul>
             <% for(let user of users){ %>
                 <li>
-                    <a href="/user/<%= user._id %>" style="text-decoration: none; color: black;"> <%= user.username %></a>
+                    <b><a href="/user/<%= user._id %>" style="text-decoration: none;"> <%= user.username %></a></b>
                 </li>
             <% } %>
         </ul>
     <% } %>
+</div>
 
-
+<!-- 
 
     <script>
 
@@ -29,4 +30,4 @@
             window.location.replace(`/search/${query}`);
         }
 
-    </script>
+    </script> -->

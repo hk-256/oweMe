@@ -69,7 +69,6 @@ app.listen(5500,()=>{
     console.log("started listening to the port 5500");
 })
 
-
 const isLoggedIn = (req,res,next)=>{
 
     if(!req.user){
@@ -156,10 +155,16 @@ app.get("/user/:id", async (req,res)=>{
     const {id} = req.params;
     const user = await User.findById(id)
                             .populate("friends","username")
+                            .populate({
+                                path: "groups.group",
+                                select: "groupName"
+                            })
                             .populate("incomingRequest","username")
                             .populate("outgoingRequest","username");
 
     var isFriend = false;
+
+                            
 
     for(let friend of user.friends){
         if(friend._id.equals(req.user._id)){

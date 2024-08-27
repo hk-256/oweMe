@@ -1,28 +1,42 @@
 <% layout('layout/boilerplate') %>
     
-    <h1><%= group.groupName %></h1>
-    <!-- <div>
-        <input type="text" id="id">
-        <button onclick="joinRoom()" id="joinbtn" >JOIN</button>
-    </div> -->
-    <div>
-        <a href="/groups/<%=group._id%>/pay">PAY</a>
-    </div>
-    <div>
-        <a href="/groups/<%=group._id%>/preview">PREVIEW</a>
-    </div>
-    <div>
-        <input type="text" id="msg">
-        <button onclick="sendMessage()" id="btn" >SEND</button>
+
+    <div style=" margin: 20px 20px 20px 20px; padding: 10px 10px 10px 10px; display: flex; align-items: center; background-color: whitesmoke; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 10px 10px 10px 10px; ">
+        <h1 style="display: inline; color: rgb(0, 123, 255);"><%= group.groupName %></h1>
+        <!-- <div>
+            <input type="text" id="id">
+            <button onclick="joinRoom()" id="joinbtn" >JOIN</button>
+        </div> -->
+        <div style="display: inline; margin-left: 10vw;">
+
+        
+            <div style="display: inline; margin-bottom:">
+                <a href="/groups/<%=group._id%>/pay" class="btn btn-primary">PAY</a>
+            </div>
+            <div style="display: inline; margin-left: 20px;">
+                <a href="/groups/<%=group._id%>/preview" class="btn btn-primary">PREVIEW</a>
+            </div>
+        </div>
     </div>
 
-    <div class="box">
-        <h1>Messages came</h1>
-        <% for(let message of group.message){ %>
-            <li> <%= message.user %> - <%= message.msg %> </li>
-        <% } %>
-
+    
+    <div style="background-color: white; margin: 20px 20px 20px 20px; padding: 10px 10px 10px 10px; height: 62vh; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 10px 10px 10px 10px; overflow: auto;">
+        <div class="box" style="padding: 5px 5px 5px 10px;">
+            <!-- <h1>Messages came</h1> -->
+            <% for(let message of group.message){ %>
+                <p> <b> <%= message.user %> </b> : <%= message.msg %> <p>
+            <% } %>
+    
+        </div>
     </div>
+
+    <div style=" margin: 20px 20px 20px 20px; padding: 10px 10px 10px 10px; ">
+        <div>
+            <input type="text" id="msg" style="width: 500px; height: 37px; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 10px 10px 10px 10px; border: 0px;">
+            <button onclick="sendMessage()" id="btn" class="btn btn-primary" style="height: 35px; margin-left: 20px; border-radius: 6px; box-shadow: 2px 2px 2px rgb(53, 53, 53);">SEND</button>
+        </div>
+    </div>
+
     
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js">
@@ -31,7 +45,7 @@
     <script>
 
         const input = document.querySelector("#msg");
-        const id = document.querySelector("#id");
+        // const id = document.querySelector("#id");
         const btn = document.querySelector("#btn");
         const joinbtn = document.querySelector("#joinbtn");
         const box = document.querySelector(".box");
@@ -49,8 +63,12 @@
         // })
 
         socket.on("receiveMessage",(data)=>{
-            const E = document.createElement("li");
-            E.textContent = `${data.user} - ${data.msg}`;
+            const E = document.createElement("p");
+            const F = document.createElement("b");
+            F.textContent = `${data.user} `;
+
+            E.textContent = `: ${data.msg}`;
+            E.prepend(F);
             box.appendChild(E);
             // console.log(data);
         })

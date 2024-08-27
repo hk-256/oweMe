@@ -1,6 +1,9 @@
 <% layout('layout/boilerplate') %>
 
-    <h1>Register</h1>
+    <!-- <h1>Register</h1> -->
+
+
+<!-- 
 
     <form action="/register" method="post">
         <div>
@@ -19,4 +22,63 @@
         <button>submit</button>
     </form>
 
-     <a href="/"> Home Page </a>
+     <a href="/"> Home Page </a> -->
+
+
+     
+<div class="container d-flex justify-content-center align-items-center mt-5" >
+    <div class="row" style="margin-top: 60px;">
+        <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-1">
+            <div class="card shadow" style="width: 270px; height: 365px; border-radius: 10px; box-shadow: 10 10; padding: 5px 5px 5px 5px;">
+                <!-- <img src="https://images.unsplash.com/photo-1571863533956-01c88e79957e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80"
+                alt="" class="card-img-top" /> -->
+                <div class="card-body">
+                    <h2 class="card-title" style="text-align: center;">Register</h2>
+
+                    <form action="/register" method="post" style="
+                    background-color: #6c7175; /* Blue background */
+                    opacity: 0.7; /* 70% opaque, 30% transparent */
+                    padding: 20px;
+                    color: white; /* Text color */
+                    border-radius: 8px; /* Rounded corners */
+                    ">
+
+                        <div class="mb-4">
+                            <label class="form-label" for="username">Username</label>
+                            <input class="form-control" type="text" id="username" name="username" autofocus required>
+                        </div>
+
+                        <!-- <div>
+                            <label for="username">Username</label>
+                            <input type="text" name="username" id="username">
+                        </div> -->
+
+                        <div class="mb-4">
+                            <label class="form-label" for="password">Password</label>
+                            <input class="form-control" type="password" id="password" name="password" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label" for="upi">UPI</label>
+                            <input class="form-control" type="text" id="upi" name="upi" required>
+                        </div>
+
+                        <!-- <div>
+                            <label for="upi">UPI</label>
+                            <input type="text" name="upi" id="upi" required>
+                        </div> -->
+                        <!-- <div>
+                            <label for="password">Password</label>
+                            <input type="text" name="password" id="password">
+                        </div> -->
+
+                        <button class="btn btn-info btn-block">
+                            Register
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

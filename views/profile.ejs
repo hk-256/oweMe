@@ -1,56 +1,116 @@
 <% layout('layout/boilerplate') %>
     
-    <div>
-        <p>Username:  <b><%= user.username %></b> </p>
-    </div>
-    <div>
-        <p>UPI:  <b><%= user.upi %></b> </p>
-    </div>
+<!--             
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                Column
+            </div>
+            <div class="col">
+                Column
+            </div>
+        </div>
+    </div> -->
 
+   
+    <!-- content -->
+    
     
    
-    <% if( !user._id.equals(currUser._id)) {%>
-
+    <div style=" position: fixed; height: 100%; width: 20vw; z-index: 1; overflow: hidden; margin: 20px 20px 20px 30px; overflow: auto ;">
+    <% if( user._id.equals(currUser._id)) {%>
+         <!-- sidenav -->
+            
         
-       <% if(!isFriend){ %> <a href="/sendRequest/<%= user._id %>" class="btn">Send Request</a>
-       <% } %>
+            <!-- <hr> -->
+            
+            <!-- <hr> -->
+             <div style="background-color: rgb(255, 255, 255); box-shadow: 2px 2px 6px rgb(53, 53, 53);  padding: 7px 7px 7px 7px; margin-top: 10px; width: 18.5vw; height: 40%; border-radius: 7px;">
+                <h3>Requests came</h3>
+                <ul>
+                    <% for(let person of user.incomingRequest){ %>
+                        <li>
+                            <a href="/user/<%=person._id%>">
+                                <b><%= person.username %></b>
+                            </a> 
+                            <a href="/makeFriend/<%=person._id%>">Accept</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
 
-    <% }else{ %>
-        <hr>
-        <h3>Your friends list</h3>
-        <ul>
-            <% for(let person of user.friends){ %>
-                <li>
-                    <a href="/user/<%=person._id%>">
-                        <b><%= person.username %></b>
-                    </a> 
-                </li>
-            <% } %>
-        </ul>
-        <hr>
-        <h3>Requests came</h3>
-        <ul>
-            <% for(let person of user.incomingRequest){ %>
-                <li>
-                    <a href="/user/<%=person._id%>">
-                        <b><%= person.username %></b>
-                    </a> 
-                    <a href="/makeFriend/<%=person._id%>">Accept</a>
-                </li>
-            <% } %>
-        </ul>
-        <hr>
-        <h3>Outgoing Requests</h3>
-        <ul>
-            <% for(let person of user.outgoingRequest){ %>
-                <li>
-                    <a href="/user/<%=person._id%>">
-                        <b><%= person.username %></b>
-                    </a> 
-                    <a href="/deleteRequest/<%=person._id%>">Delete Request</a>
-                </li>
-            <% } %>
-        </ul>
+            <!-- <hr> -->
+            <div style="background-color: rgb(255, 255, 255); box-shadow: 2px 2px 6px rgb(53, 53, 53); padding: 7px 7px 7px 7px; margin-top: 20px; width: 18.5vw; height: 40%; border-radius: 7px; overflow: auto;">
+                <h3 >Outgoing Requests</h3>
+                <ul>
+                    <% for(let person of user.outgoingRequest){ %>
+                        <li>
+                            <a href="/user/<%=person._id%>">
+                                <b><%= person.username %></b>
+                            </a> 
+                            <a href="/deleteRequest/<%=person._id%>">Delete Request</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        
+            
+            
+            
+            
+        <% }%>
+            
+    </div>
 
+    <div style=" position: fixed; margin-left: 23.5vw; width: 50%; margin-top: 30px; margin-right: 30px;">
+        <div style="background-color: rgb(255, 255, 255); box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 10px 10px 10px 10px;">
+            <div>
+                <p>Username:  <b><%= user.username %></b> </p>
+            </div>
+            <div>
+                <p>UPI:  <b><%= user.upi %></b> </p>
+            </div>
+
+            <% if( !user._id.equals(currUser._id) && !isFriend ) {%>
+                <a href="/sendRequest/<%= user._id %>" class="btn btn-primary">Send Request</a>
+            <% } %>
+
+        </div>
+        
+        
+        <% if( user._id.equals(currUser._id)) {%>
+            <div style="margin-top: 20px; height: 68vh;  background-color: rgb(255, 255, 255); box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 10px 10px 10px 10px;">
+                <h3>Your friends list</h3>
+                <ul>
+                <% for(let person of user.friends){ %>
+                    <li>
+                        <a href="/user/<%=person._id%>">
+                            <b><%= person.username %></b>
+                        </a> 
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+
+            
+
+        <% } %>
+       
+    </div>
+
+    <% if( user._id.equals(currUser._id)) {%>
+        <div style=" position: fixed; margin-left: 76.5vw; width: 21%; height: 82vh; margin-top: 30px; margin-right: 30px; background-color: white; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 10px 10px 10px 10px;"" >
+            <h3>
+                Groups
+            </h3>
+            <% for(let X of user.groups){ %>
+                <li>
+                    <a href="/groups/<%=X.group._id%>">
+                        <b><%= X.group.groupName %></b>
+                    </a> 
+                </li>
+
+            <% } %>
+
+        </div>
     <% } %>
-    

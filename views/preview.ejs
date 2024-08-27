@@ -1,7 +1,10 @@
 <% layout('layout/boilerplate') %>
 
-    <% for(let X of group.groupMembers){ %>
-        <li>
-            <b><%= X.user.username %></b> >>> <%= X.owe %>
-        </li>
-    <% } %>
+<div style="position: absolute; width: 30%; margin-left: 35vw; height: 82vh; margin-top: 30px; margin-right: 30px; background-color: white; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 25px 10px 10px 20px; overflow: auto; z-index: 0; display: flex; flex-flow: column wrap; ; align-items: center;">
+    
+        <% for(let X of group.groupMembers){ %>
+            <p>
+                <b ><%= X.user.username %></b> : <%= X.owe %>
+            </p>
+        <% } %>
+</div>

@@ -23,9 +23,9 @@
               <a class="dropdown-item" href="/logout">Logout</a>
               </div>
               </li> -->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="/search">Search</a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="/groups">Groups</a>
         </li>
@@ -33,15 +33,34 @@
           <a class="nav-link disabled" href="#">Disabled</a>
         </li> -->
       </ul>
+      <div class="form-inline my-2 my-lg-0 " style="margin-right: 10px;">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
+        <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="search()">Search</button> -->
+    </div>
       <div class="form-inline my-2 my-lg-0">
         <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search" required>
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
         <% if(currUser && !currUser.length){ %>
           <a href="/logout">Logout</a>
         <% }else{ %>
-          <a href="/login">Login</a>
+          <a href="/register">Register</a>
         <% } %>
 
       </div>
     </div>
   </nav>
+
+  <script>
+    const id = document.querySelector("#search");
+    id.addEventListener("keydown",(e)=>{
+      if(e.key == "Enter"){
+        const query = document.querySelector('#search').value;
+        window.location.replace(`/search/${query}`);
+      }
+    })
+    // function search(){
+    //     const query = document.querySelector('#search').value;
+    //     window.location.replace(`/search/${query}`);
+    // }
+
+</script>

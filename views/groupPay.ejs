@@ -1,26 +1,32 @@
 
 <% layout('layout/boilerplate') %>
     
-
+<!-- 
 <h1>
     SPLIT IT
-</h1>
+</h1> -->
+<div style="margin-left: 33vw;">
+    <form action="/groups/<%= group._id %>/pay" method="post" >
+        <div style="background-color: white; margin: 20px 20px 20px 50px; padding: 10px 10px 10px 10px; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 25px 10px 10px 20px; overflow: auto; z-index: 0; width: 27vw; max-height: 80vh; overflow: auto;">
+        
+            <% for(let X of group.groupMembers){ %>
+                <% if(X.user._id.equals(currUser._id)) continue; %>
+                <p>
+                    <label for="inputs"> <b> <%= X.user.username %> </b> </label> - <input type="number" class="inputs" style="" placeholder="0" value="" name="inputs[<%= X.user._id %>]">
+                </p>
+            <% } %>
+        
+        </div>
+        <div style="background-color: white; margin: 20px 20px 20px 50px; padding: 10px 10px 10px 10px; box-shadow: 2px 2px 6px rgb(53, 53, 53); border-radius: 7px; padding: 20px; overflow: auto; z-index: 0; width: 27vw; max-height: 80vh; overflow: auto;">
+            <button class="btn btn-primary" style="margin-right: 20px;">Transact</button>
+            
+            <div class="btn btn-primary" style="cursor: pointer;" onclick="sumUp()">Do Total</div> <b style="margin-left: 10px;">$</b> <input style="border: 0px;" type="number" id="total" value="0" readonly>
 
-<form action="/groups/<%= group._id %>/pay" method="post">
-
-<% for(let X of group.groupMembers){ %>
-    <% if(X.user._id.equals(currUser._id)) continue; %>
-    <li>
-        <label for="inputs"> <b> <%= X.user.username %> </b> </label> - <input type="number" class="inputs" placeholder="0" value="" name="inputs[<%= X.user._id %>]">
-    </li>
-<% } %>
-
-<button>Transact</button>
-
-</form>
-
-<button style="cursor: pointer;" onclick="sumUp()">SUM UP</button> - <input type="number" id="total" value="0" readonly>
-
+        </div>
+            
+        </form>
+        
+</div>
 
 
 <script>
